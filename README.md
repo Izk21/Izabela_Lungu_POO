@@ -1,6 +1,5 @@
 # Repo
-
-Nume: Lungu
+Nume: Lungu \n 
 Prenume: Elena-Izabela
 Grupa : 212
 
