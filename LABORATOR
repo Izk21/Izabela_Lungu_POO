@@ -1,4 +1,4 @@
-
+/// programului ii ia destul de mult sa ruleze apoi arata erori type si de operatori.. idk, program in main gresit.. m-am pierdut la ultima parte
 #include <iostream>
 #include <string.h>
 #include <bits/stdc++.h>
