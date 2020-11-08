@@ -1,4 +1,4 @@
-# Repo
+
 Lungu Elena Izabela 212
 
 DESCRIERE PROIECT:
