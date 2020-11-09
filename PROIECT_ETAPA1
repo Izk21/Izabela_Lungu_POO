@@ -801,7 +801,7 @@ do{
     cout<<"\n\nTastati codul elementului dorit:\n1 -ARMA; 2 -ECHIPAMENT; 3 -VEHICUL; 0 -INCHIDERE MENIU\n";
     cin>>cod;
     switch(cod){
-        case 1: { cout<<"\n1 pentru a afla locatia elementului\n2 pentru a sterge elementul\n3 pentru a adauga elementul\n4 pentru a scadea numarul de folosiri ale elementului\n5 pentru a creste numarul de folosiri ale elementului\n\n";
+        case 1: { //cout<<"\n1 pentru a afla locatia elementului\n2 pentru a sterge elementul\n3 pentru a adauga elementul\n4 pentru a scadea numarul de folosiri ale elementului\n5 pentru a creste numarul de folosiri ale elementului\n\n";
                    a1.citireArma();
                    cout<<a1;
                   // Arme a2=a1;
