@@ -244,8 +244,6 @@ friend istream& operator>> (istream& in, Arme& arma){
            damage=0;
          return damage;
     }
-
-
 	   virtual int getNrGloante(){
         return this->nrGloante;
     }
