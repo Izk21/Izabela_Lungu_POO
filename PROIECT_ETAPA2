@@ -1,0 +1,1075 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+class Arme{
+	private:
+	   int nrGloante;
+	   bool folosita;
+	   char* numeArma;
+	   string serieArma;
+	   float calibrulGlontului;
+       int* Atasamente;
+       double reculArma;
+	   const int idArma;
+	   int nrAtasamente;
+	   int lungimea;
+	   int latimea;
+    public:
+	   static int nrFolosiriArma;
+       char tipArma;
+
+	   Arme(int id, char* numeArma, string serieArma, char tipArma, bool folosita, int nrFolosiriArma,int lungimeaLamei, int latimeaLamei):idArma(00000){
+        this->numeArma=new char[strlen(numeArma)+1]; //arme albe
+        strcpy(this->numeArma,numeArma);
+
+        this->serieArma=serieArma;
+
+        this->tipArma=tipArma;
+
+        this->folosita=folosita;
+
+        this->nrFolosiriArma=nrFolosiriArma;
+
+        this->lungimea=lungimea;
+
+        this->latimea=latimea;}
+
+	   Arme(int id, char* numeArma, string serieArma, int nrGloante, float calibrulGlontului, double reculArma, int nrAtasamente, int* Atasamente, bool folosita, int nrFolosiriArma):idArma(00000){
+        this->numeArma=new char[strlen(numeArma)+1];  //pt arma foc
+        strcpy(this->numeArma,numeArma);
+
+        this->serieArma=serieArma;
+
+        this->nrGloante=nrGloante;
+
+        this->calibrulGlontului=calibrulGlontului;
+
+        this->reculArma=reculArma;
+
+        this->nrAtasamente=nrAtasamente;
+
+        this->Atasamente=new int[nrAtasamente];
+        for(int i=0;i<nrAtasamente;i++)
+            this->Atasamente[i]=Atasamente[i];
+
+        this->folosita=folosita;
+
+        this->nrFolosiriArma=nrFolosiriArma;}
+
+	   Arme():idArma(00){
+        nrGloante=0;
+        tipArma='\0';
+        numeArma=new char[strlen("Initiala"+1)];
+        strcpy(this->numeArma,"Initiala");
+        this->serieArma="necunoscuta";
+        calibrulGlontului=0;
+        Atasamente=new int[0];
+        reculArma=0;
+        nrAtasamente=0;
+        lungimea=0;
+        latimea=0;}
+
+	   Arme(const Arme& arma):idArma(arma.idArma){
+        this->nrGloante=arma.nrGloante;
+
+        this->tipArma=arma.tipArma;
+
+        this->calibrulGlontului=arma.calibrulGlontului;
+
+        this->reculArma=arma.reculArma;
+
+        this->folosita=arma.folosita;
+
+        this->serieArma=arma.serieArma;
+
+        this->nrAtasamente=arma.nrAtasamente;
+
+        this->lungimea=arma.lungimea;
+
+        this->latimea=arma.latimea;
+
+        this->numeArma=new char[strlen(arma.numeArma)+1];
+        strcpy(this->numeArma,arma.numeArma);
+
+        this->Atasamente=new int[arma.nrAtasamente];
+        for(int i=0;i<arma.nrAtasamente;i++)
+            this->Atasamente[i]=arma.Atasamente[i];}
+
+	   Arme& operator =(const Arme& arma){
+        if(this!=&arma){
+            this->nrGloante=arma.nrGloante;
+            this->nrAtasamente=arma.nrAtasamente;
+            this->reculArma=arma.reculArma;
+            this->calibrulGlontului=arma.calibrulGlontului;
+            this->lungimea=arma.lungimea;
+            this->latimea=arma.latimea;
+            this->tipArma=arma.tipArma;
+
+        if(this->numeArma!=nullptr)
+            delete[] this->numeArma;
+
+        this->numeArma=new char[strlen(arma.numeArma)+1];
+        strcpy(this->numeArma,arma.numeArma);
+
+        if(this->Atasamente!=nullptr)
+            delete[] this->Atasamente;
+
+        this->Atasamente=new int[arma.nrAtasamente];
+        for(int i=0;i<nrAtasamente;i++)
+            this->Atasamente[i]=arma.Atasamente[i];}
+	     return *this;}
+
+friend ostream& operator<< (ostream& out,const Arme arma){
+        if(arma.tipArma=='F'||arma.tipArma=='f'){
+            out<<"\nArma "<<arma.numeArma<<" are seria "<<arma.serieArma
+           <<", tipul "<<arma.tipArma<<" avand un numar de "<<arma.nrGloante
+           <<" gloante, ficare glont avand calibrul "<<arma.calibrulGlontului
+           <<".\nFolosita in aceasta unitate: "<<arma.folosita<<".\nDamage:"
+           <<arma.dmgArma();}
+        if(arma.tipArma=='A'||arma.tipArma=='a'){
+            out<<"\nArma "<<arma.numeArma<<" are seria "<<arma.serieArma
+           <<", tipul "<<arma.tipArma<<" avand dimensiunile "<<arma.lungimea
+           <<" , " <<arma.latimea<<".\nFolosita in aceasta unitate: "
+           <<arma.folosita<<".\nDamage:"<<arma.dmgArma();}
+        return out;}
+
+friend istream& operator>> (istream& in, Arme& arma){
+        cout<<"\nIntroduceti numele armei:\n";
+        in>>arma.numeArma;
+
+        cout<<"Introduceti seria armei:\n";
+        in>>arma.serieArma;
+
+        cout<<"Introduceti tipul armei: [A -alba; F -de foc] \n";
+        in>>arma.tipArma;
+
+        if(arma.tipArma=='F'||arma.tipArma=='f'){
+
+            cout<<"Introduceti numarul de gloante ale armei:\n";
+            in>>arma.nrGloante;
+
+            cout<<"Introduceti calibrul glontului :\n";
+            in>>arma.calibrulGlontului;
+
+            cout<<"Introduceti numarul de atasamente ale armei: [min 0, max 3]\n";
+            in>>arma.nrAtasamente;
+
+            arma.Atasamente=new int[arma.nrAtasamente];
+            cout<<"Introduceti atsamentele armei: [1 -amortizor, 2 -luneta, 3 -stativ]\n";
+            for(int i=0;i<arma.nrAtasamente;i++)
+                in>>arma.Atasamente[i];
+
+            cout<<"Introduceti reculul armei:\n";
+            in>>arma.reculArma;}
+
+        if(arma.tipArma=='A'||arma.tipArma=='a'){
+            cout<<"Introduceti lungimea armei: ";
+            in>>arma.lungimea;
+
+            cout<<"Introduceti latimea armei: ";
+            in>>arma.latimea;
+        }
+
+        cout<<"A mai fost folosita arma in aceata unitate? [1 -DA, 0 -NU]\n";
+        in>>arma.folosita;
+            return in;}
+
+	   float operator[](int index){
+        if(index<this->nrAtasamente&&index>=0)
+            return this->Atasamente[index];
+        else{ cout<<"Index INVALID";
+              return -1;}
+        }
+
+	   const Arme operator++(int){
+            Arme aux(*this);
+            this->nrFolosiriArma++;
+          return *this;}
+
+	   const Arme operator--(int){
+           Arme aux(*this);
+           this->nrFolosiriArma--;
+          return aux;}
+
+	   Arme operator +(int a){
+        int Atasamente2[100];
+        if(this->Atasamente!=nullptr){
+            for(int i=0;i<nrAtasamente;i++)
+                Atasamente2[i]=this->Atasamente[i];
+            delete[] this->Atasamente;
+        }
+        this->nrAtasamente++;
+        this->Atasamente=new int[this->nrAtasamente];
+        for(int i=0;i<this->nrAtasamente-1;i++)
+            this->Atasamente[i]=Atasamente2[i];
+        this->Atasamente[this->nrAtasamente-1]=a;
+    return *this;
+    }
+
+	   Arme operator -(int a){
+        int Atasamente2[100];
+        if(this->Atasamente!=nullptr){
+            for(int i=0;i<nrAtasamente;i++)
+                Atasamente2[i]=this->Atasamente[i];
+            delete[] this->Atasamente;
+        }
+        this->nrAtasamente--;
+        this->Atasamente=new int[this->nrAtasamente];
+        for(int i=0;i<this->nrAtasamente-1;i++)
+            this->Atasamente[i]=Atasamente2[i];
+        this->Atasamente[this->nrAtasamente-1]=a;
+    return *this;
+    }
+
+	   explicit operator int(){
+        return (int)this->dmgArma();}
+
+	   bool operator >=(Arme& am){
+      if(this->nrFolosiriArma>=1)
+        {return true;} else{return false;}
+    }
+
+	   bool operator ==(Arme& am){
+        return (strcmp(numeArma,am.numeArma) && calibrulGlontului==am.calibrulGlontului)? true:false;
+    }
+
+	   float dmgArma() const{
+	       float damage;
+       if(this->tipArma=='f'||this->tipArma=='F')
+            damage = (this->nrGloante*35-5)/2 + this->nrAtasamente*10;
+       if(this->tipArma=='a'||this->tipArma=='A')
+            damage = (this->lungimea*40-2)/2 + this->latimea*10;
+       if(damage < 0 )
+           damage=0;
+         return damage;
+    }
+
+
+	   virtual int getNrGloante(){
+        return this->nrGloante;
+    }
+	   virtual char getTipArma(){
+        return this->tipArma;
+    }
+	   virtual char* getNumeArma(){
+        return this->numeArma;
+    }
+
+	   virtual string getSerieArma(){
+        return this->serieArma;
+    }
+
+	   virtual int* getAtasamente(){
+	       for(int i=0;i<this->nrAtasamente;i++)
+             cout<< this->Atasamente[i]<<" ";
+        return 0;
+    }
+
+	   virtual float getCalibrulGlontului(){
+        return this->calibrulGlontului;}
+
+	   virtual double getReculArma(){
+        return this->reculArma;
+    }
+
+	   virtual bool getFolosita(){
+        return this->folosita;
+    }
+
+	   virtual int getNrAtasamente(){
+        return this->nrAtasamente;
+    }
+
+	   virtual int getLungimea(){
+        return this->lungimea;
+    }
+
+	   virtual int getLatimea(){
+        return this->latimea;
+    }
+
+	   virtual void setNrGloante(int a){
+        this->nrGloante=a;
+    }
+
+	   virtual void setTipArma(char a){
+        this->tipArma=a;
+        }
+
+	   virtual void setNumeArma(char* a){
+        if(this->numeArma!=nullptr)
+            delete[] numeArma;
+
+        this->numeArma= new char[strlen(a)+1];
+        strcpy(this->numeArma,a);
+    }
+
+	   virtual void setAtasamente(int* a, int b){
+        if(this->Atasamente!=nullptr)
+            delete[] this->Atasamente;
+
+        this->Atasamente=new int[b];
+
+        for(int i=0;i<b;i++)
+            this->Atasamente[i]=a[i];
+    }
+
+	   virtual void setSerieArma(string a){
+        this->serieArma=a;
+        }
+
+	   virtual void setCalibrulGlontului(float a){
+        this->calibrulGlontului=a;
+    }
+
+	   virtual void setReculArma(double a){
+        this->reculArma=a;
+    }
+
+	   virtual void setFolosita(bool a){
+        this->folosita=a;
+    }
+
+	   virtual void setNrAtasamente(int a){
+        this->nrAtasamente=a;
+    }
+	   virtual void setLungimea(int a){
+        this->lungimea=a;
+    }
+
+	   virtual void setLatimea(int a){
+        this->latimea=a;
+    }
+
+	   Arme(int nrGloante):idArma(00000){
+        this->nrGloante=nrGloante;
+    }
+
+
+	   ~Arme(){
+        if(this->Atasamente!=nullptr)
+            delete[] this->Atasamente;
+        if(this->numeArma!=nullptr)
+            delete[] this->numeArma;
+    }
+
+};
+
+class ArmeExplozibile:public Arme{
+private:
+    int nrSubstante;
+    int razaActiune;
+public:
+    ArmeExplozibile():Arme(){
+        this->nrSubstante=0;
+        this->razaActiune=0;
+    }
+    int getNrSubstante(){
+        return this->nrSubstante;
+    }
+    int getRazaActiune(){
+        return this->razaActiune;
+    }
+
+    friend ostream& operator<<(ostream& out,const ArmeExplozibile& a){
+        out<<(Arme&)a;
+        out<<"Numarul de substante componente: "<<a.nrSubstante;
+        out<<"\nRaza de actiune: "<<a.razaActiune;
+    return out;
+    }
+
+    friend istream& operator >>(istream& in, ArmeExplozibile& a){
+        in>>(Arme&)a;
+        cout<<"Numarul de substante componente: ";
+        in>>a.nrSubstante;
+        cout<<"\nRaza de actiune: ";
+        in>>a.razaActiune;
+    return in;}
+};
+
+class Locatie{
+	private:
+	   int etaj;
+	   bool exista;
+	   char local;
+	   char* serieRaft;
+	   char serieCamera[100];
+	   float coordonataY;
+       int* Dulapuri;
+       double coordonataX;
+	   const int idDepozit;
+	   int nrDulapuri;
+    public:
+	   static int nrDepozite;
+
+    Locatie(int id, char local, int etaj, char *serieCamera, int nrDulapuri, int* Dulapuri,char* serieRaft,float coordonataY, double coordonataX,bool exista, int nrDepozite):idDepozit(00000){
+        this->local=local;
+
+        this->etaj=etaj;
+
+        strcpy(this->serieCamera,serieCamera);
+
+        this->nrDulapuri=nrDulapuri;
+
+        this->Dulapuri=new int[nrDulapuri];
+        for(int i=0;i<nrDulapuri;i++)
+            this->Dulapuri[i]=Dulapuri[i];
+
+        this->serieRaft=new char[strlen(serieRaft)+1];
+        strcpy(this->serieRaft,serieRaft);
+
+        this->exista=exista;
+
+        this->nrDepozite=nrDepozite;
+
+        this->coordonataX=coordonataX;
+
+        this->coordonataX=coordonataY;
+    }
+
+    Locatie(int id, char local, float coordonataX, double coordonataY, bool exista, int nrDepozite):idDepozit(00000){
+        this->nrDepozite=nrDepozite;
+
+        this->exista=exista;
+
+        this->coordonataX=coordonataX;
+
+        this->coordonataX=coordonataY;
+
+        this->local=local;
+    }
+
+    Locatie():idDepozit(00000){
+        etaj=0;
+        local='\0';
+        coordonataX=0;
+        coordonataY=0;
+        Dulapuri=NULL;
+        serieRaft=new char[strlen("Initial")+1];
+        strcpy(this->serieRaft,"Initial");
+    }
+
+    Locatie(const Locatie& loc):idDepozit(loc.idDepozit){
+
+        this->Dulapuri=new int[loc.nrDulapuri];
+        for(int i=0;i<loc.nrDulapuri;i++)
+            this->Dulapuri[i]=loc.Dulapuri[i];
+
+        this->exista=loc.exista;
+
+        this->nrDulapuri=loc.nrDulapuri;
+
+        this->nrDepozite=loc.nrDepozite;
+
+        strcpy(this->serieCamera,loc.serieCamera);
+
+        this->coordonataX=loc.coordonataX;
+
+        this->coordonataY=loc.coordonataY;
+
+        this->serieRaft=new char[strlen(serieRaft)+1];
+        strcpy(this->serieRaft,loc.serieRaft);
+
+        this->etaj=loc.etaj;
+
+        this->local=loc.local;
+    }
+
+    Locatie& operator=(const Locatie& loc){
+        if(this!=&loc){
+            this->etaj=loc.etaj;
+            this->nrDulapuri=loc.nrDulapuri;
+            this->coordonataY=loc.coordonataY;
+            this->coordonataX=loc.coordonataX;
+
+        if(this->serieRaft!=nullptr)
+            delete[] this->serieRaft;
+        this->serieRaft=new char[strlen(loc.serieRaft)+1];
+        strcpy(this->serieRaft,loc.serieRaft);
+
+        if(this->Dulapuri!=nullptr)
+            delete[] this->Dulapuri;
+        this->Dulapuri=new int[loc.nrDulapuri];
+        }
+        return *this;
+    }
+
+    friend ostream& operator<< (ostream& out,const Locatie loc){
+    return out;
+    }
+    friend istream& operator>> (istream& in, Locatie& loc){
+    return in;
+    }
+
+    float operator [](int index){
+        if(index<this->nrDulapuri&&index>=0)
+            return this->Dulapuri[index];
+        else{cout<<"Index INVALID";
+             return -1;
+             }
+        }
+
+    const Locatie operator++(int){
+        this->nrDepozite++;
+    return *this;
+    }
+
+    const Locatie operator--(int){
+        Locatie aux(*this);
+        this->nrDepozite--;
+    return aux;
+    }
+
+    Locatie operator+(int a){
+        int Dulapuri2[100];
+        if(this->Dulapuri!=nullptr){
+            for(int i=0;i<this->nrDulapuri;i++)
+                Dulapuri2[i]=this->Dulapuri[i];
+            delete[] this->Dulapuri;
+        }
+        this->nrDulapuri++;
+        this->Dulapuri=new int[this->nrDulapuri];
+        for(int i=0;i<this->nrDulapuri-1;i++)
+            this->Dulapuri[i]=Dulapuri2[i];
+        this->Dulapuri[this->nrDulapuri-1]=a;
+
+        return *this;
+    }
+
+    Locatie operator-(int a){
+        int Dulapuri2[100];
+        if(this->Dulapuri!=nullptr){
+            for(int i=0;i<this->nrDulapuri;i++)
+                Dulapuri2[i]=this->Dulapuri[i];
+            delete[] this->Dulapuri;
+        }
+        this->nrDulapuri--;
+        this->Dulapuri=new int[this->nrDulapuri];
+        for(int i=0;i<this->nrDulapuri-1;i++)
+            this->Dulapuri[i]=Dulapuri2[i];
+        this->Dulapuri[this->nrDulapuri-1]=a;
+
+        return *this;
+    }
+
+    explicit operator int(){
+        return (int)this->supLocatie();
+    }
+
+    bool operator >=(Locatie& lm){
+        if(this->nrDepozite>=1)
+            {return true;}
+        else {return false;}
+    }
+
+    bool operator ==(Locatie& lm){
+        return (coordonataX==lm.coordonataX && coordonataY==lm.coordonataY)? true:false;
+    }
+
+    float supLocatie(){
+        float suprafata=(this->coordonataX*this->coordonataX+this->coordonataY*this->coordonataX)*4;
+    return suprafata;
+    }
+
+    int getEtaj(){
+        return this->etaj;
+    }
+
+    char getLocal(){
+        return this->local;
+    }
+
+    char* getSerieRaft(){
+        return this->serieRaft;
+    }
+
+    char *getSerieCamera(){
+        return this->serieCamera;
+    }
+
+    float getCoordonataY(){
+        return this->coordonataY;
+    }
+
+    int* getDulapuri(){
+        return this->Dulapuri;
+    }
+
+    double getCoordonataX(){
+        return this->coordonataX;
+    }
+
+    bool getExista(){
+        return this->exista;
+    }
+
+    int getNrDulapuri(){
+        return this->nrDulapuri;
+    }
+
+    void setEtaj(int a){
+        this->etaj=a;
+    }
+
+    void setLocal(char a){
+        this->local=a;
+    }
+
+    void setSerieRaft(char* a){
+        if(this->serieRaft!=nullptr)
+            delete[] serieRaft;
+        this->serieRaft= new char[strlen(a)+1];
+        strcpy(this->serieRaft,a);
+    }
+
+    void setSerieCamera(char a[100]){
+        strcpy(this->serieCamera,a);
+        }
+
+    void setCoordonataY(float a){
+        this->coordonataY=a;
+    }
+
+    void setDulapuri(int* a,int b){
+            if(this->Dulapuri!=nullptr)
+            delete[] Dulapuri;
+
+       this->Dulapuri=new int[b];
+
+       for(int i=0;i<b;i++)
+            this->Dulapuri[i]=a[i];
+    }
+
+    void setCoordonataX(double a){
+        this->coordonataX=a;
+    }
+
+    void setExista(bool a){
+        this->exista=a;}
+
+    void setNrDulapuri(int a){
+        this->nrDulapuri=a;
+    }
+
+    Locatie(int etaj):idDepozit(00000){
+        this->etaj=etaj;}
+
+    ~Locatie(){
+        if(this->serieRaft!=nullptr)
+            delete[] serieRaft;
+        if(this->Dulapuri!=nullptr)
+            delete[] Dulapuri;
+        }
+
+};
+int Locatie::nrDepozite=0;
+
+class Echipamente{
+	private:
+       const int idEdchipament;
+       int marimeEchipament;
+	   bool folosit;
+       char serieEchipament[100];
+	   char* numeEchipament;
+       char tipEchipament;
+    public:
+       static int nrFolosiri;
+
+Echipamente(int id, int marimeEchipament, char tipEchipament, char* numeEchipament,bool folosit,char serieEchipament[100], int nrFolosiri):idEdchipament(00000){
+    this->marimeEchipament=marimeEchipament;
+    this->tipEchipament=tipEchipament;
+    this->folosit=folosit;
+    this->numeEchipament=new char[strlen(numeEchipament)+1];
+    strcpy(this->numeEchipament,numeEchipament);
+    this->nrFolosiri=nrFolosiri;
+    }
+
+Echipamente(int id, int marimeEchipament, char* numeEchipament,char serieEchipament[100], char tipEchipament):idEdchipament(00000){
+    this->marimeEchipament=marimeEchipament;
+    this->tipEchipament=tipEchipament;
+    this->numeEchipament=new char[strlen(numeEchipament)+1];
+    strcpy(this->numeEchipament,numeEchipament);
+}
+
+Echipamente():idEdchipament(00000){
+    marimeEchipament=0;
+    numeEchipament=new char[strlen("universala")+1];
+    strcpy(this->numeEchipament,"universala");
+    strcpy(this->serieEchipament,"anonima");
+    tipEchipament='\0';
+}
+
+Echipamente(const Echipamente& ehi):idEdchipament(ehi.idEdchipament){
+    this->marimeEchipament=ehi.marimeEchipament;
+    this->tipEchipament=ehi.tipEchipament;
+    this->numeEchipament=ehi.numeEchipament;
+    strcpy(this->numeEchipament,ehi.numeEchipament);
+    strcpy(this->serieEchipament,ehi.serieEchipament);
+}
+
+Echipamente& operator=(const Echipamente& ehi){
+    if(this!=&ehi){
+        this->folosit=ehi.folosit;
+        this->marimeEchipament=ehi.marimeEchipament;
+        this->nrFolosiri=ehi.nrFolosiri;
+        this->tipEchipament=ehi.tipEchipament;
+        this->numeEchipament=new char[strlen(ehi.numeEchipament)+1];
+        strcpy(this->numeEchipament,ehi.numeEchipament);
+        strcpy(this->serieEchipament,ehi.serieEchipament);
+}return *this;
+}
+
+friend ostream& operator<< (ostream& out,const Echipamente ehi){
+    out<<"\nEchipamentul "<<ehi.numeEchipament<<" cu seria "<<ehi.serieEchipament
+       << ", marimea "<< ehi.marimeEchipament<<".\nFolosit in aceasta unitate: "<<ehi.folosit;
+
+    return out;
+}
+
+friend istream& operator>>(istream& in, const Echipamente ehi){
+    return in;
+}
+
+void citireEchipament(){
+    char aux[100];
+
+    cout<<"\nIntroduceti numele echipamentului:\n";
+    cin>>aux;
+    this->numeEchipament= new char[strlen(aux)+1];
+    strcpy(this->numeEchipament,aux);
+
+    cout<<"Introduceti seria echipamentului:\n";
+    cin>>aux;
+    strcpy(this->serieEchipament,aux);
+
+    cout<<"Introduceti marimea echipamentului: [intre 28 si 50]\n";
+    cin>>this->marimeEchipament;
+
+    cout<<"Introduceti tipul echipamentului: [O -ofensiv; D-defensiv; M -mixt]\n";
+    cin>>this->tipEchipament;
+
+    cout<<"A mai fost folosit echipamentul? [1 -DA; 0 -NU]\n";
+    cin>>this->folosit;
+
+}
+
+~Echipamente(){
+    if(this->numeEchipament!=nullptr)
+        delete[] this->numeEchipament;
+}
+
+};
+
+class Vehicule{
+	private:
+	   const int idVehicul;
+       bool folosit;
+	   int gabarit;
+       char* numeVehicul;
+	   string serieVehicul;
+	   int nrPasageri;
+    public:
+	   static int nrFolosiri;
+
+    Vehicule(int id,int gabarit, string serieVehicul,char* numeVehicul, bool folosit,int nrFolosiri,int nrPasageri):idVehicul(00){
+        this->gabarit=gabarit;
+        this->serieVehicul=serieVehicul;
+        this->folosit=folosit;
+        this->nrFolosiri=nrFolosiri;
+        this->numeVehicul=new char[strlen(numeVehicul)+1];
+        strcpy(this->numeVehicul,numeVehicul);
+        this->nrPasageri=nrPasageri;
+        }
+
+    Vehicule(int id, int gabarit, char* numeVehicul,string serieVehicul):idVehicul(00){
+        this->gabarit=gabarit;
+        this->numeVehicul=new char[strlen(numeVehicul)+1];
+        strcpy(this->numeVehicul,numeVehicul);
+        this->serieVehicul=serieVehicul;
+        }
+
+    Vehicule():idVehicul(00){
+        this->gabarit=0;
+        this->numeVehicul=new char[strlen("Anonim"+1)];
+        strcpy(this->numeVehicul,"anonim");
+        this->serieVehicul="anonima";
+        this->folosit=0;
+        this->nrPasageri=0;
+        }
+
+    Vehicule(const Vehicule& veh):idVehicul(veh.idVehicul){
+        this->gabarit=veh.gabarit;
+        this->numeVehicul=new char[strlen(veh.numeVehicul)+1];
+        strcpy(this->numeVehicul,veh.numeVehicul);
+        this->folosit=veh.folosit;
+        this->serieVehicul=veh.serieVehicul;
+        this->nrPasageri=veh.nrPasageri;
+        }
+
+    Vehicule& operator =(const Vehicule& veh){
+        if(this!=&veh){
+            this->gabarit=veh.gabarit;
+            this->folosit=veh.folosit;
+            this->numeVehicul=new char[strlen(veh.numeVehicul)+1];
+            strcpy(this->numeVehicul,veh.numeVehicul);
+            this->serieVehicul=veh.serieVehicul;
+            this->nrPasageri=veh.nrPasageri;
+        }
+        return *this;}
+
+
+friend ostream& operator<< (ostream& out,const Vehicule v){
+
+    out<<"\nVehiculul "<<v.numeVehicul<<" are seria "<<v.serieVehicul<<" si are "
+       <<v.gabarit<<" tone.\nO capacitate de "<<v.nrPasageri
+       <<" pasageri.\nFolosit de catre unitate: " <<v.folosit;
+
+    return out;
+}
+
+friend istream& operator>>(istream& in, Vehicule v){
+    cout<<"\nIntroduceti numele vehiculului:\n";
+    in>>v.numeVehicul;
+
+    cout<<"\nIntroduceti seria vehiculului:\n";
+    in>>v.serieVehicul;
+
+    cout<<"\nIntroduceti gabaritul vehicului:\n";
+    in>>v.gabarit;
+
+    cout<<"\nVehiculul a mai fost folosit in aceasta unitate? (1 -DA; 0 -NU)\n";
+    in>>v.folosit;
+
+    cout<<"\nCati pasageri transporta?\n";
+    in>>v.nrPasageri;
+    return in;
+}
+
+    virtual int getGabarit(){
+        return this->gabarit;}
+
+    virtual bool getFolosit(){
+        return this->folosit;}
+
+    virtual int getNrPasageri(){
+        return this->nrPasageri;}
+
+    virtual string getSerieVehicul(){
+        return this->serieVehicul;}
+
+    virtual char* getNumeVehicul(){
+        return this->numeVehicul;}
+
+~Vehicule(){
+    if(this->numeVehicul!=nullptr)
+        delete[] this->numeVehicul;
+    }
+
+};
+
+class VehiculeNautice:public Vehicule{
+private:
+    string numeVehNautic;
+    int lungime;
+public:
+    VehiculeNautice():Vehicule(){
+        this->numeVehNautic="necunoscut";
+        this->lungime=0;
+    }
+
+    string getNumeVehNautic(){
+        return this->numeVehNautic;}
+
+    int getLungime(){
+        return this->lungime;}
+
+    friend ostream& operator<<(ostream& out,const VehiculeNautice& n){
+        out<<(Vehicule&)n;
+        out<<n.numeVehNautic<<endl;
+        out<<n.lungime<<endl;
+        return out;
+    }
+
+    friend istream& operator >>(istream& in, VehiculeNautice& n){
+        in>>(Vehicule&)n;
+        cout<<"Nume vehicul nautic: ";
+        in>>n.numeVehNautic;
+        cout<<"Lungime: ";
+        in>>n.lungime;
+        return in;
+    }
+};
+
+void afisareVehicul(Vehicule* veh){
+       cout<<"folosit: "<<veh->getFolosit()<<endl;
+       cout<<"gabarit: "<<veh->getGabarit()<<endl;
+       cout<<"serieVehicul: "<<veh->getSerieVehicul()<<endl;
+       cout<<"nrPasageri: "<<veh->getNrPasageri()<<endl;
+}
+
+void afisareArma(Arme* arma){
+    if(arma->tipArma=='F'||arma->tipArma=='f'){
+        cout<<"Numar Gloante: "<<arma->getNrGloante()<<endl;
+        cout<<"Folosita: "<<arma->getFolosita()<<endl;
+        cout<<"Nume: "<<arma->getNumeArma()<<endl;
+        cout<<"Serie: "<<arma->getSerieArma()<<endl;
+        cout<<"Calibrul glontului: "<<arma->getCalibrulGlontului()<<endl;
+        cout<<"Atasamente: "<<arma->getAtasamente()<<endl;
+        cout<<"Recul: "<<arma->getReculArma()<<endl;
+        cout<<"Numar atasamente: "<<arma->getNrAtasamente()<<endl;}
+    else{
+        cout<<"Folosita: "<<arma->getFolosita()<<endl;
+        cout<<"Nume: "<<arma->getNumeArma()<<endl;
+        cout<<"Serie: "<<arma->getSerieArma()<<endl;
+        cout<<"Dimensiunile: "<<arma->getLungimea()<<", "<<arma->getLatimea()<<endl;}
+}
+
+void MeniuAlegere(){
+    int cod;
+    //int cod2;
+    Arme* ar1[2];
+    ArmeExplozibile ae;
+
+    Vehicule* v1[2];
+    VehiculeNautice vn;
+
+    Arme a1;
+    Echipamente e1;
+    Vehicule vh;
+
+do{
+    cout<<"\n\nTastati codul elementului dorit:\n1 -ARMA; 2 -ECHIPAMENT; 3 -VEHICUL; 4 -ARMA EXPLOZIBILA; 5 -VEHICUL NAUTIC 0 -INCHIDERE MENIU\n";
+    cin>>cod;
+    switch(cod){
+        case 1: { //cout<<"\n1 pentru a afla locatia elementului\n2 pentru a sterge elementul\n3 pentru a adauga elementul\n4 pentru a scadea numarul de folosiri ale elementului\n5 pentru a creste numarul de folosiri ale elementului\n\n";
+                   cin>>a1;
+                   cout<<a1;
+                  // Arme a2=a1;
+                  /* cin>>cod2;
+                   switch(cod2){case 1:Locatie(); break;
+                                case 2:stergeElement(); break;
+                                case 3:adaugaElement(); break;
+                                case 4:scademElement(); break;
+                                case 5:crestemElemet();} break;*/
+                }
+                break;
+        case 2: {e1.citireEchipament();
+                 cout<<e1;}
+            break;
+        case 3: {cin>>vh;
+                cout<<vh;}
+            break;
+        case 4: {cin>>ae;
+                 ar1[0]=new ArmeExplozibile();
+                 *ar1[0]=ae;
+                 afisareArma(*ar1);}
+            break;
+        case 5: {cin>>vn;
+                v1[0]=new VehiculeNautice();
+                *v1[0]=vn;
+                afisareVehicul(*v1);}
+
+        case 0: cout<<"Ati parasit meniul!";
+                break;
+        default: cout<<"Introduceti un cod valid :)\n";
+        }
+    }while(cod!=0);
+}
+
+class Explozie{
+protected:
+    int raza;
+    int explozibil;
+    int nrParticule;
+    int deltaTime;
+public:
+    virtual int zonaExplozie()=0;
+    virtual int radiatiiEmanate()=0;
+    void setRaza(int r){
+        this->raza= r;
+    }
+    void setExplozibil(int e){
+        this->explozibil=e;
+    }
+    void setNrParticule(int p){
+        this->nrParticule=p;
+    }
+    void setDeltaTime(int d){
+        this->deltaTime=d;
+    }
+};
+
+class DimensiuneExplozie:public Explozie{
+public:
+    int zonaExplozie(){
+        return(this->explozibil*50* 2*acos(0.0))/4;
+    }
+};
+
+class ActivitateRadioactiva:public Explozie{
+public:
+    int radiatiiEmanate(){
+        return -(this->nrParticule/this->deltaTime);
+    }
+};
+
+void activareExplozie(){
+    DimensiuneExplozie* de;
+    de->setExplozibil(5);
+    de->setRaza(2);
+    cout<<" dimensiunea exploziei: "<<de->zonaExplozie()<<" m². "<< endl;
+    }
+
+void activareRadiatii(){
+    ActivitateRadioactiva* re;
+    re->setNrParticule(20);
+    re->setDeltaTime(3);
+    cout<<" nicelul radiatiei: "<<re->radiatiiEmanate()<<" röntgen. "<<endl;
+}
+
+float despag(){
+    int nrVictime=576;
+    double TVA= 4.6;
+    float despagubiri=1000*nrVictime+TVA;
+    return despagubiri;
+}
+
+class victime{
+public:
+    virtual void despagubiri()=0;
+};
+
+class soldati:public victime{
+    void despagubiri(){
+        cout<<" Despagubiri: ";
+        cout<<despag();
+        cout<<endl;}
+};
+class colaterale:public victime{
+    void despagubiri(){
+        cout<<" Despagubiri: ";
+        cout<<despag();
+        cout<<endl;}
+};
+
+int activareVictime(){
+    victime* s=new soldati();
+    s->despagubiri();
+        victime* c=new colaterale();
+    c->despagubiri();
+    if(s) delete s;
+    if(c) delete c;
+
+ return 0;
+}
+
+int main()
+{
+//activareVictime();
+//activareRadiatii();
+//activareExplozie();
+MeniuAlegere();
+
+    return 0;
+}
